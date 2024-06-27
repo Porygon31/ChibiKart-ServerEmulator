@@ -13,7 +13,7 @@ Public Class Form1
     Public Sub New()
         InitializeComponent()
         httpServer = New HttpServer(lbxMessages)
-        gameServer = New GameServer(lbxMessages)
+        gameServer = New GameServer(RichTextBox1)
     End Sub
 
     'Load

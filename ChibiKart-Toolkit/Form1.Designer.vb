@@ -35,6 +35,7 @@ Partial Class Form1
         Me.lbxMessages = New System.Windows.Forms.ListBox()
         Me.ofdInputPAK = New System.Windows.Forms.OpenFileDialog()
         Me.btnStartWebServer = New System.Windows.Forms.Button()
+        Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -113,7 +114,7 @@ Partial Class Form1
         Me.lbxMessages.ItemHeight = 15
         Me.lbxMessages.Location = New System.Drawing.Point(12, 77)
         Me.lbxMessages.Name = "lbxMessages"
-        Me.lbxMessages.Size = New System.Drawing.Size(1173, 529)
+        Me.lbxMessages.Size = New System.Drawing.Size(1173, 184)
         Me.lbxMessages.TabIndex = 2
         '
         'ofdInputPAK
@@ -129,11 +130,20 @@ Partial Class Form1
         Me.btnStartWebServer.Text = "Start Web Server"
         Me.btnStartWebServer.UseVisualStyleBackColor = True
         '
+        'RichTextBox1
+        '
+        Me.RichTextBox1.Location = New System.Drawing.Point(12, 267)
+        Me.RichTextBox1.Name = "RichTextBox1"
+        Me.RichTextBox1.Size = New System.Drawing.Size(1173, 618)
+        Me.RichTextBox1.TabIndex = 4
+        Me.RichTextBox1.Text = ""
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1197, 626)
+        Me.ClientSize = New System.Drawing.Size(1197, 894)
+        Me.Controls.Add(Me.RichTextBox1)
         Me.Controls.Add(Me.btnStartWebServer)
         Me.Controls.Add(Me.lbxMessages)
         Me.Controls.Add(Me.btnStartGameServer)
@@ -161,5 +171,5 @@ Partial Class Form1
     Friend WithEvents DecryptStringToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents btnStartWebServer As Button
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
-
+    Friend WithEvents RichTextBox1 As RichTextBox
 End Class

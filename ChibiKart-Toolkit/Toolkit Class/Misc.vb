@@ -41,4 +41,45 @@ Public Class Misc
         MessageBox.Show(result.ToString())
     End Function
 
+    Shared Function FormatByteArray(data As Byte()) As String
+        Dim sb As New StringBuilder()
+        Dim lineLength As Integer = 16
+
+        For i As Integer = 0 To data.Length - 1 Step lineLength
+            ' Print the address
+            sb.AppendFormat("{0:X8}: ", i)
+
+            ' Print the hexadecimal part
+            For j As Integer = 0 To lineLength - 1
+                If i + j < data.Length Then
+                    sb.AppendFormat("{0:X2} ", data(i + j))
+                Else
+                    sb.Append("   ")
+                End If
+                If j = 7 Then sb.Append(" ") ' Extra space after 8 bytes for readability
+            Next
+
+            sb.Append(" ")
+
+            ' Print the ASCII part
+            For j As Integer = 0 To lineLength - 1
+                If i + j < data.Length Then
+                    Dim ch As Char = Convert.ToChar(data(i + j))
+                    If Char.IsControl(ch) Then
+                        sb.Append(".")
+                    Else
+                        sb.Append(ch)
+                    End If
+                Else
+                    sb.Append(" ")
+                End If
+            Next
+
+            sb.AppendLine()
+        Next
+
+        Return sb.ToString()
+    End Function
+
+
 End Class

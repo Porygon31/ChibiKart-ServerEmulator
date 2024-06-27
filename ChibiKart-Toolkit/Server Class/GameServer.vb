@@ -3,16 +3,17 @@ Imports System.Net.Sockets
 Imports System.Text
 Imports System.Threading
 Imports System.IO
+Imports ChibiKart_Toolkit.Misc
 
 Public Class GameServer
     Private tcpListener As TcpListener
     Private listenerThread As Thread
     Private logFilePath As String = "logs/gameserver_log.txt"
-    Private listBox As ListBox
+    Private RTF As RichTextBox
     Private responses As Dictionary(Of String, Byte())
 
-    Public Sub New(listBox As ListBox)
-        Me.listBox = listBox
+    Public Sub New(RTF As RichTextBox)
+        Me.RTF = RTF
         tcpListener = New TcpListener(IPAddress.Parse("127.0.0.1"), 9981)
         listenerThread = New Thread(AddressOf StartServer)
     End Sub
@@ -47,12 +48,15 @@ Public Class GameServer
                 Dim buffer(1024) As Byte
                 Dim bytesRead As Integer = stream.Read(buffer, 0, buffer.Length)
                 Dim request As String = BitConverter.ToString(buffer, 0, bytesRead).Replace("-", "")
+                Dim REQdata(bytesRead - 1) As Byte
+                Array.Copy(buffer, REQdata, bytesRead)
 
                 ' Convert the first 3 bytes of the request to a hex string
                 Dim requestPrefix As String = BitConverter.ToString(buffer, 0, 4).Replace("-", "")
 
                 ' Log the request to the ListView
-                LogRequest("Received:    " & request)
+                Dim FomattedByteREQ = FormatByteArray(REQdata)
+                LogRequest("Received:" & vbNewLine & FomattedByteREQ)
 
                 ' Load responses from XML
                 LoadResponses()
@@ -63,7 +67,8 @@ Public Class GameServer
                     ' Respond with the bytes from the XML
                     stream.Write(responseBytes, 0, responseBytes.Length)
                     Dim responseString As String = BitConverter.ToString(responseBytes, 0, responseBytes.Length).Replace("-", "")
-                    LogRequest("Responded: " & responseString)
+                    Dim FomattedByteRES = FormatByteArray(responseBytes)
+                    LogRequest("Responded: " & vbNewLine & FomattedByteRES)
                 Else
                     ' Send the original request back to the client
                     Dim response As Byte() = buffer.Take(bytesRead).ToArray()
@@ -83,7 +88,7 @@ Public Class GameServer
         responses = New Dictionary(Of String, Byte())
         responses.Clear()
 
-        Dim xml = XDocument.Load("responses.xml")
+        Dim xml = XDocument.Load("xml/responses.xml")
         For Each responseElement In xml.Descendants("Response")
             Dim trigger = responseElement.Element("Trigger").Value
             Dim data = responseElement.Element("Data").Value.Replace(" ", "")
@@ -93,14 +98,14 @@ Public Class GameServer
     End Sub
 
     Private Sub LogRequest(message As String)
-        If listBox.InvokeRequired Then
-            listBox.Invoke(New Action(Sub() listBox.Items.Add(message)))
+        If RTF.InvokeRequired Then
+            RTF.Invoke(New Action(Sub() RTF.AppendText(message & vbNewLine)))
         Else
-            listBox.Items.Add(message)
+            RTF.AppendText(message)
         End If
 
         Using writer As New StreamWriter(logFilePath, True)
-            writer.WriteLine($"{DateTime.Now}: {message}")
+            writer.WriteLine($"{DateTime.Now}: {vbNewLine & message}")
         End Using
     End Sub
 End Class
